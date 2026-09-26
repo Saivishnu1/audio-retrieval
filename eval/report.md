@@ -20,10 +20,10 @@ Hit criterion: a result counts as relevant if its `(file, start_sec, end_sec)` *
 | semantic_only | paraphrase | 12 | 0.67 | 1.00 | 1.00 | 0.769 |
 | semantic_only | named_entity | 11 | 0.55 | 1.00 | 1.00 | 0.708 |
 | semantic_only | multi_span | 2 | 1.00 | 1.00 | 1.00 | 1.000 |
-| hybrid_rrf | **overall** | 41 | 0.78 | 1.00 | 1.00 | 0.865 |
+| hybrid_rrf | **overall** | 41 | 0.80 | 1.00 | 1.00 | 0.878 |
 | hybrid_rrf | exact_keyword | 16 | 0.94 | 1.00 | 1.00 | 0.969 |
 | hybrid_rrf | paraphrase | 12 | 0.67 | 1.00 | 1.00 | 0.769 |
-| hybrid_rrf | named_entity | 11 | 0.64 | 1.00 | 1.00 | 0.795 |
+| hybrid_rrf | named_entity | 11 | 0.73 | 1.00 | 1.00 | 0.841 |
 | hybrid_rrf | multi_span | 2 | 1.00 | 1.00 | 1.00 | 1.000 |
 
 ## Configs
