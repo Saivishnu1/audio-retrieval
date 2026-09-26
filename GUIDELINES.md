@@ -90,13 +90,20 @@ print a per-file chunking summary and end with:
 Ingested 259 chunks total.
 ```
 
-To ingest with the local (offline, `sentence-transformers`/`bge-small`)
-embedder instead of OpenAI, into a separate column so it doesn't disturb
-the primary vectors:
+### Using the local embedder instead of OpenAI
+
+`--embedder local` uses an offline `sentence-transformers`/`bge-small`
+model (no API key needed) and writes to a separate column, so it never
+disturbs the primary OpenAI vectors; both can be ingested and compared
+side by side. Use the same `--embedder` flag at ingest time and at search
+time:
 
 ```bash
 python -m ingestion.ingest --manifest manifest.yaml --embedder local
+python -m retrieval.retrieve "your query here" --embedder local
 ```
+
+See `RESULTS.md` for how the two embedders compare on the golden eval set.
 
 ## 5. Search
 
@@ -107,7 +114,9 @@ python -m retrieval.retrieve "your query here" --top-k 5
 ```
 
 Add `--embedder local` to search against the local-model vectors instead of
-OpenAI's (only works after step 4's local-embedder ingestion has been run).
+OpenAI's (only works after the local-embedder ingestion above has been run).
+Mixing them (ingesting with one, searching with the other) raises
+`EmbedderMismatchError` rather than silently returning wrong results.
 
 **Python usage** (calling `search()` directly, in-process, instead of the CLI):
 
@@ -122,6 +131,15 @@ results = search("your query here", OpenAIEmbedder(), top_k=5)
 for r in results:
     print(r.file, r.start_sec, r.end_sec, r.speaker, r.legs)
     print(r.text)
+```
+
+To use the local embedder instead, swap in `LocalEmbedder()` and pass
+`target="local"`:
+
+```python
+from core.embedder import LocalEmbedder
+
+results = search("your query here", LocalEmbedder(), top_k=5, target="local")
 ```
 
 Each result reports: `file`, `start_sec`/`end_sec`, `speaker`, `text`

@@ -58,5 +58,21 @@ python -m ingestion.ingest --embedder openai
 python -m retrieval.retrieve "your query here" --top-k 5
 ```
 
+## Switching embedders (OpenAI vs. local)
+
+Two embedding backends are supported behind the same interface, each writing
+to its own column so both can coexist: `--embedder openai` (primary,
+`text-embedding-3-small`, needs `OPENAI_API_KEY`) and `--embedder local`
+(offline, `bge-small-en-v1.5`, no API key). Ingest and search with the same
+flag:
+
+```bash
+python -m ingestion.ingest --manifest manifest.yaml --embedder local
+python -m retrieval.retrieve "your query here" --embedder local
+```
+
+See `RESULTS.md` for how the two compare on the golden eval set, and
+`GUIDELINES.md` section 4-5 for the full walkthrough.
+
 Full details, including prerequisites and troubleshooting, are in
 `GUIDELINES.md`.
