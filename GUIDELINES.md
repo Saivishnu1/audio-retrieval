@@ -153,10 +153,19 @@ Only needed if you add new audio clips. Extract audio from a YouTube URL:
 python -m youtube_audio.cli "https://www.youtube.com/watch?v=VIDEO_ID" -o downloads -f mp3
 ```
 
-Transcribe + diarize a directory of clips:
+Transcribe + diarize a directory of clips (Deepgram, requires
+`DEEPGRAM_API_KEY`). Defaults to reading from `clips/` and writing to
+`transcripts/`, so no env vars are needed for the default layout:
 
 ```bash
-python -m transcription.cli clips --output-dir transcripts --format txt
+python src/transcription/diarize_transcribe.py
+```
+
+To use different directories, override `DIARIZE_INPUT_DIR`/
+`DIARIZE_OUTPUT_DIR`:
+
+```bash
+DIARIZE_INPUT_DIR=my_clips DIARIZE_OUTPUT_DIR=my_transcripts python src/transcription/diarize_transcribe.py
 ```
 
 Then add the new clip's entry to `manifest.yaml` (file path, title, source
