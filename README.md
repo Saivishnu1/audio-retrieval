@@ -50,6 +50,10 @@ Audio Retrieval/
 
 ## Quick start
 
+Requires a running PostgreSQL instance (with `pgvector` and `pg_trgm`
+available to install) reachable with the credentials you put in `.env`.
+See `GUIDELINES.md` section 1 for setup details.
+
 ```bash
 uv sync --extra dev
 cp .env.example .env        # then fill in API keys and Postgres credentials
