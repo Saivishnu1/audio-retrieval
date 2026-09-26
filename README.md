@@ -71,7 +71,15 @@ python -m ingestion.ingest --manifest manifest.yaml --embedder local
 python -m retrieval.retrieve "your query here" --embedder local
 ```
 
-See `RESULTS.md` for how the two compare on the golden eval set, and
+Both were evaluated on the same 41-query golden set. OpenAI wins overall,
+with the gap concentrated entirely in paraphrased queries:
+
+| Embedder | recall@1 | recall@5/10 | MRR |
+|---|---|---|---|
+| OpenAI `text-embedding-3-small` (primary) | **0.80** | 1.00 | **0.878** |
+| Local `bge-small-en-v1.5` (offline) | 0.71 | 1.00 | 0.793 |
+
+See `RESULTS.md` for the full per-bucket breakdown and analysis, and
 `GUIDELINES.md` section 4-5 for the full walkthrough.
 
 Full details, including prerequisites and troubleshooting, are in
