@@ -1,0 +1,483 @@
+# Golden query set for retrieval evaluation.
+#
+# Each query's `relevant` spans use start_sec/end_sec as OFFSETS INTO THE
+# ORIGINAL SOURCE VIDEO (matching manifest.yaml's convention), not into the
+# trimmed clip file. `speaker` is the real name from manifest.yaml.
+#
+# IMPORTANT (ground-truth source): every span here was built from the
+# original diarized turn boundaries in transcripts/*.txt, NOT from the
+# ingestion/chunking.py output (the `chunks` table / Chunk objects).
+# Keep it that way: chunking's split (long turns) and merge (short
+# backchannels) logic can change over time -- a threshold tweak, a
+# different neighbor-merge preference, etc. -- and a chunk's start/end
+# for a split or merged chunk is either an *estimate* (split) or spans
+# more than one original turn (merge). If a label were built by reading
+# chunk boundaries directly, it would silently encode whatever the
+# chunker's current logic happens to produce, and go stale the next time
+# that logic changes, without any visible sign that it happened. Anchoring
+# to the transcript's own turns avoids that: the eval's ground truth is
+# independent of the retrieval system's implementation details.
+#
+# Buckets:
+#   exact_keyword  - a distinctive phrase actually spoken verbatim
+#   paraphrase     - same meaning, different words (validated: <30% word
+#                    overlap with the source span's text)
+#   named_entity   - a proper noun / rare technical term
+#   multi_span     - relevant to content in 2+ files
+#
+# Validate with: python eval/validate_queries.py
+
+queries:
+  # ---------------------------------------------------------------------
+  # julius_caesar_24-43_35-31.mp3  (source: 1483.0-2131.6s)
+  # ---------------------------------------------------------------------
+  # NOTE (post-hoc correction, see DESIGN_REPORT.md section 4.2):
+  # original span (1930-1990) has nothing to do with circumvallation
+  # (it's the chariots/Edward II passage, same defect class as jc_03's
+  # original span). "You build the circumvallation around it" is in
+  # segment [469-500] relative (verified via
+  # chunking.parse_transcript_file), i.e. 1952-1983 absolute -- same
+  # segment as jc_03's corrected span.
+  - id: jc_01
+    query: "circumvallation around Alesia"
+    bucket: exact_keyword
+    relevant:
+      - file: clips/julius_caesar_24-43_35-31.mp3
+        start_sec: 1952
+        end_sec: 1983
+        speaker: "Dr. Simon Elliott"
+
+  - id: jc_02
+    query: "explaining the incredible speed of that military campaign compared to other provinces"
+    bucket: paraphrase
+    relevant:
+      - file: clips/julius_caesar_24-43_35-31.mp3
+        start_sec: 1483
+        end_sec: 1531
+        speaker: "Dr. Simon Elliott"
+
+  # NOTE (post-hoc correction, see DESIGN_REPORT.md section 4.2):
+  # original span (1929-1963) has nothing to do with Vercingetorix (it's
+  # the chariots/Edward II passage) -- it only "passed" retrieval by
+  # accidental partial overlap with the real answer's chunk tail.
+  # Vercingetorix is first named at segment [469-500] relative (verified
+  # via chunking.parse_transcript_file), i.e. 1952-1983 absolute.
+  - id: jc_03
+    query: "Vercingetorix"
+    bucket: named_entity
+    relevant:
+      - file: clips/julius_caesar_24-43_35-31.mp3
+        start_sec: 1952
+        end_sec: 1983
+        speaker: "Dr. Simon Elliott"
+
+  - id: jc_04
+    query: "Caesar's tenth legion Legio ten Equestris"
+    bucket: exact_keyword
+    relevant:
+      - file: clips/julius_caesar_24-43_35-31.mp3
+        start_sec: 1565
+        end_sec: 1579
+        speaker: "Dr. Simon Elliott"
+
+  - id: jc_05
+    query: "how unfamiliar and dangerous unknown territory felt for a land power used to a single enclosed body of water"
+    bucket: paraphrase
+    relevant:
+      - file: clips/julius_caesar_24-43_35-31.mp3
+        start_sec: 1663
+        end_sec: 1700
+        speaker: "Dr. Simon Elliott"
+
+  - id: jc_06
+    query: "Battle of the Sambre Belgae campaign"
+    bucket: named_entity
+    relevant:
+      - file: clips/julius_caesar_24-43_35-31.mp3
+        start_sec: 1610
+        end_sec: 1646
+        speaker: "Dr. Simon Elliott"
+
+  - id: jc_07
+    query: "only one opposed invasion of Britain in history"
+    bucket: exact_keyword
+    relevant:
+      - file: clips/julius_caesar_24-43_35-31.mp3
+        start_sec: 1916
+        end_sec: 1928
+        speaker: "Dan Snow"
+
+  # ---------------------------------------------------------------------
+  # dr_becky_1-00-10_1-12-56.mp3  (source: 3610.0-4376.0s)
+  # ---------------------------------------------------------------------
+  - id: db_01
+    query: "we always say it good inside the feelings bench"
+    bucket: exact_keyword
+    relevant:
+      - file: clips/dr_becky_1-00-10_1-12-56.mp3
+        start_sec: 4045  # 7:15 clip-relative
+        end_sec: 4055
+        speaker: "Dr. Becky Kennedy"
+
+  # NOTE (post-hoc correction, see DESIGN_REPORT.md section 4.2):
+  # original span (3701-3720) mostly covered segment [89-101] relative
+  # ("half the time I listen...") and only the first 9s of the real
+  # answer's segment; the causal claim ("the more you optimize for
+  # happiness in childhood, the more you actually wire for anxiety in
+  # adulthood") is fully in segment [101-120] relative (verified via
+  # chunking.parse_transcript_file), i.e. 3711-3730 absolute.
+  - id: db_02
+    query: "why trying to keep your child happy all the time backfires later in life"
+    bucket: paraphrase
+    relevant:
+      - file: clips/dr_becky_1-00-10_1-12-56.mp3
+        start_sec: 3711
+        end_sec: 3730
+        speaker: "Dr. Becky Kennedy"
+
+  - id: db_03
+    query: "I'm the only one in my class who can't read"
+    bucket: exact_keyword
+    relevant:
+      - file: clips/dr_becky_1-00-10_1-12-56.mp3
+        start_sec: 3737
+        end_sec: 3749
+        speaker: "Dr. Becky Kennedy"
+
+  - id: db_04
+    query: "a short list of phrases that make a child feel heard rather than dismissed"
+    bucket: paraphrase
+    relevant:
+      - file: clips/dr_becky_1-00-10_1-12-56.mp3
+        start_sec: 4098
+        end_sec: 4128
+        speaker: "Dr. Becky Kennedy"
+
+  # NOTE (post-hoc correction, see DESIGN_REPORT.md section 4.2):
+  # original span (4055-4058) is the segment AFTER the one that actually
+  # says "Good Inside" -- the phrase is in segment [435-445] relative
+  # (verified via chunking.parse_transcript_file), i.e. 4045-4055
+  # absolute (same segment as db_01's span).
+  - id: db_05
+    query: "Good Inside"
+    bucket: named_entity
+    relevant:
+      - file: clips/dr_becky_1-00-10_1-12-56.mp3
+        start_sec: 4045
+        end_sec: 4055
+        speaker: "Dr. Becky Kennedy"
+
+  - id: db_06
+    query: "boundaries and validation when paired together, that's what makes for really resilient adults"
+    bucket: exact_keyword
+    relevant:
+      - file: clips/dr_becky_1-00-10_1-12-56.mp3
+        start_sec: 3610
+        end_sec: 3640
+        speaker: "Dr. Becky Kennedy"
+
+  - id: db_07
+    query: "a spouse dismissing a fresh business pitch without letting them finish explaining it"
+    bucket: paraphrase
+    relevant:
+      - file: clips/dr_becky_1-00-10_1-12-56.mp3
+        start_sec: 4285
+        end_sec: 4330
+        speaker: "Jay"
+
+  # ---------------------------------------------------------------------
+  # openclaw_52-34_1-01-14.mp3  (source: 3154.0-3674.0s)
+  # ---------------------------------------------------------------------
+  - id: oc_01
+    query: "prompt injection is still an open problem industry wide"
+    bucket: exact_keyword
+    relevant:
+      - file: clips/openclaw_52-34_1-01-14.mp3
+        start_sec: 3213
+        end_sec: 3244
+        speaker: "Lex Fridman"
+
+  - id: oc_02
+    query: "cheap or local AI models are much easier to trick into ignoring their instructions"
+    bucket: paraphrase
+    relevant:
+      - file: clips/openclaw_52-34_1-01-14.mp3
+        start_sec: 3364
+        end_sec: 3390
+        speaker: "Peter Steinberger"
+
+  - id: oc_03
+    query: "VirusTotal skill directory checked by AI"
+    bucket: named_entity
+    relevant:
+      - file: clips/openclaw_52-34_1-01-14.mp3
+        start_sec: 3245
+        end_sec: 3259
+        speaker: "Peter Steinberger"
+
+  - id: oc_04
+    query: "running cloud code with dangerously skip permissions or codex in YOLO mode"
+    bucket: exact_keyword
+    relevant:
+      - file: clips/openclaw_52-34_1-01-14.mp3
+        start_sec: 3626
+        end_sec: 3649
+        speaker: "Peter Steinberger"
+
+  # NOTE (post-hoc correction, see DESIGN_REPORT.md section 4.2): original
+  # span (3391-3398) pointed at the wrong moment entirely; the actual
+  # question "Do you think as the models become more and more intelligent,
+  # the attack surface decreases?" is segment [277-296] relative (verified
+  # via chunking.parse_transcript_file), i.e. 3431-3450 absolute.
+  - id: oc_05
+    query: "is a more capable AI system naturally harder to manipulate through malicious text"
+    bucket: paraphrase
+    relevant:
+      - file: clips/openclaw_52-34_1-01-14.mp3
+        start_sec: 3431
+        end_sec: 3450
+        speaker: "Lex Fridman"
+
+  - id: oc_06
+    query: "CVSSes remote code exploits"
+    bucket: named_entity
+    relevant:
+      - file: clips/openclaw_52-34_1-01-14.mp3
+        start_sec: 3173
+        end_sec: 3197
+        speaker: "Peter Steinberger"
+
+  # ---------------------------------------------------------------------
+  # sundar_pichai_1-15-23_1-25-13.mp3  (source: 4523.0-5113.0s)
+  # ---------------------------------------------------------------------
+  - id: sp_01
+    query: "V8 JavaScript engine team in Aarhus Denmark"
+    bucket: named_entity
+    relevant:
+      - file: clips/sundar_pichai_1-15-23_1-25-13.mp3
+        start_sec: 4669
+        end_sec: 4679
+        speaker: "Sundar Pichai"
+
+  # NOTE (post-hoc correction, see DESIGN_REPORT.md section 4.2): original
+  # span (4523-4564) covered Lex's Chrome-compliment preamble (segments
+  # [0-21] and [21-57] relative), not the actual "tell me the story of
+  # what it took to push for Chrome, what was your vision?" question,
+  # which is segment [58-64] relative (verified via
+  # chunking.parse_transcript_file), i.e. 4581-4587 absolute.
+  - id: sp_02
+    query: "the origin story behind advocating internally for a risky new product nobody else believed in"
+    bucket: paraphrase
+    relevant:
+      - file: clips/sundar_pichai_1-15-23_1-25-13.mp3
+        start_sec: 4581
+        end_sec: 4587
+        speaker: "Lex Fridman"
+
+  - id: sp_03
+    query: "congrats on ten million paid robo taxi rides"
+    bucket: exact_keyword
+    relevant:
+      - file: clips/sundar_pichai_1-15-23_1-25-13.mp3
+        start_sec: 4885
+        end_sec: 4916
+        speaker: "Lex Fridman"
+
+  - id: sp_04
+    query: "the first eighty percent is easy, the final twenty percent takes eighty percent of the time"
+    bucket: exact_keyword
+    relevant:
+      - file: clips/sundar_pichai_1-15-23_1-25-13.mp3
+        start_sec: 4916
+        end_sec: 4940
+        speaker: "Sundar Pichai"
+
+  # NOTE (post-hoc correction, see DESIGN_REPORT.md section 4.2): original
+  # span (4661-4726) actually pointed at Chrome-origin-story content (a
+  # near-duplicate of sp_02's span), not the Larry/Sergey moonshot answer.
+  # The real answer is "I mean, this is something Larry and Sergei
+  # articulated clearly... moonshots..." at segment [266-334] relative
+  # (verified via chunking.parse_transcript_file), i.e. 4789-4857 absolute,
+  # spanning the question (line 14) through the full 3-part answer
+  # (lines 15-17).
+  - id: sp_05
+    query: "why the founders encouraged chasing extremely difficult, high-risk projects"
+    bucket: paraphrase
+    relevant:
+      - file: clips/sundar_pichai_1-15-23_1-25-13.mp3
+        start_sec: 4789
+        end_sec: 4857
+        speaker: "Sundar Pichai"
+
+  - id: sp_06
+    query: "Waymo Driver general purpose autonomy versus Tesla self driving"
+    bucket: named_entity
+    relevant:
+      - file: clips/sundar_pichai_1-15-23_1-25-13.mp3
+        start_sec: 5060
+        end_sec: 5075
+        speaker: "Sundar Pichai"
+
+  # ---------------------------------------------------------------------
+  # the_problem_with_startup_experts.mp3  (source: 0.0-748.416s)
+  # ---------------------------------------------------------------------
+  - id: se_01
+    query: "no advice is better than bad advice"
+    bucket: exact_keyword
+    relevant:
+      - file: clips/the_problem_with_startup_experts.mp3
+        start_sec: 432
+        end_sec: 448
+        speaker: "Michael Seibel"
+
+  - id: se_02
+    query: "founders who arrive with zero preconceptions are actually easier to coach than ones who picked up bad habits early"
+    bucket: paraphrase
+    relevant:
+      - file: clips/the_problem_with_startup_experts.mp3
+        start_sec: 106
+        end_sec: 128
+        speaker: "Dalton Caldwell"
+
+  - id: se_03
+    query: "bad plastic surgery is worse than not having it at all"
+    bucket: exact_keyword
+    relevant:
+      - file: clips/the_problem_with_startup_experts.mp3
+        start_sec: 470
+        end_sec: 483
+        speaker: "Dalton Caldwell"
+
+  - id: se_04
+    query: "a big conglomerate's innovation lab offering to be your first customer and teach you innovation"
+    bucket: exact_keyword
+    relevant:
+      - file: clips/the_problem_with_startup_experts.mp3
+        start_sec: 0
+        end_sec: 16
+        speaker: "Dalton Caldwell"
+
+  - id: se_05
+    query: "the density of people who have started or invested in good companies in the Bay Area"
+    bucket: exact_keyword
+    relevant:
+      - file: clips/the_problem_with_startup_experts.mp3
+        start_sec: 607
+        end_sec: 632
+        speaker: "Michael Seibel"
+
+  - id: se_06
+    query: "PG's essays lean startup manual"
+    bucket: named_entity
+    relevant:
+      - file: clips/the_problem_with_startup_experts.mp3
+        start_sec: 305
+        end_sec: 349
+        speaker: "Michael Seibel"
+
+  - id: se_07
+    query: "startup accelerator in East Brunswick New Jersey"
+    bucket: named_entity
+    relevant:
+      - file: clips/the_problem_with_startup_experts.mp3
+        start_sec: 692
+        end_sec: 709
+        speaker: "Michael Seibel"
+
+  # ---------------------------------------------------------------------
+  # by_the_dry_heart_of_empire_18-07.5_26-58.5.mp3  (source: 1087.5-1618.5s)
+  # ---------------------------------------------------------------------
+  - id: dh_01
+    query: "collapsed dolmens megaliths"
+    bucket: exact_keyword
+    relevant:
+      - file: clips/by_the_dry_heart_of_empire_18-07.5_26-58.5.mp3
+        start_sec: 1124
+        end_sec: 1163
+        speaker: "Dr. Hemanth Kadambi"
+
+  - id: dh_02
+    query: "how did the Vijayanagara empire block enemy cavalry from riding into the capital"
+    bucket: paraphrase
+    relevant:
+      - file: clips/by_the_dry_heart_of_empire_18-07.5_26-58.5.mp3
+        start_sec: 1298
+        end_sec: 1352
+        speaker: "Dr. Hemanth Kadambi"
+
+  - id: dh_03
+    query: "Vijayanagara horse stones at Hampi"
+    bucket: named_entity
+    relevant:
+      - file: clips/by_the_dry_heart_of_empire_18-07.5_26-58.5.mp3
+        start_sec: 1298
+        end_sec: 1372
+        speaker: "Dr. Hemanth Kadambi"
+
+  - id: dh_04
+    query: "the southern fort at Badami was penetrated by the British in 1818"
+    bucket: exact_keyword
+    relevant:
+      - file: clips/by_the_dry_heart_of_empire_18-07.5_26-58.5.mp3
+        start_sec: 1440
+        end_sec: 1460
+        speaker: "Dr. Hemanth Kadambi"
+
+  - id: dh_05
+    query: "Hyder Ali and Tipu Sultan repaired the fort in the eighteenth century"
+    bucket: named_entity
+    relevant:
+      - file: clips/by_the_dry_heart_of_empire_18-07.5_26-58.5.mp3
+        start_sec: 1455
+        end_sec: 1462
+        speaker: "Dr. Hemanth Kadambi"
+
+  - id: dh_06
+    query: "explaining why enemy forces couldn't just march straight through the settlement's supposedly weak point"
+    bucket: paraphrase
+    relevant:
+      - file: clips/by_the_dry_heart_of_empire_18-07.5_26-58.5.mp3
+        start_sec: 1108
+        end_sec: 1124
+        speaker: "Kit Patrick"
+
+  # ---------------------------------------------------------------------
+  # multi_span: fortification / siege / defense across two history clips
+  # ---------------------------------------------------------------------
+  # NOTE (post-hoc correction, see DESIGN_REPORT.md section 4.2):
+  # ms_01 and ms_02's spans were originally anchored to the wrong
+  # sub-span within each correct chunk's transcript -- e.g. by_the_dry_heart's
+  # original 1298-1372 covered only the horse-stones/Hampi tangent, missing
+  # the actual pivot into "defensive obstacles" that starts at line 14
+  # (2:41 relative), and julius_caesar's original 1929-1965 started after
+  # "circumvallation" is introduced (line 36, 7:49 relative) and ended
+  # before the ditches/palisades description finishes (line 41, 9:08
+  # relative). Both were verified line-by-line against the transcripts
+  # and corrected below (offsets cross-checked two ways: hand arithmetic
+  # against manifest.yaml's start_sec, and programmatically against
+  # parse_transcript_file()'s parsed segment timestamps).
+  - id: ms_01
+    query: "clever defensive obstacles ancient armies built to stop enemy forces from marching straight in"
+    bucket: multi_span
+    relevant:
+      - file: clips/julius_caesar_24-43_35-31.mp3
+        start_sec: 1952
+        end_sec: 2031
+        speaker: "Dr. Simon Elliott"
+      - file: clips/by_the_dry_heart_of_empire_18-07.5_26-58.5.mp3
+        start_sec: 1248.5
+        end_sec: 1441.5
+        speaker: "Dr. Hemanth Kadambi"
+
+  - id: ms_02
+    query: "how do historians and archaeologists figure out a site's old defenses when there's no obvious wall left standing"
+    bucket: multi_span
+    relevant:
+      - file: clips/julius_caesar_24-43_35-31.mp3
+        start_sec: 1952
+        end_sec: 2031
+        speaker: "Dr. Simon Elliott"
+      - file: clips/by_the_dry_heart_of_empire_18-07.5_26-58.5.mp3
+        start_sec: 1248.5
+        end_sec: 1441.5
+        speaker: "Dr. Hemanth Kadambi"

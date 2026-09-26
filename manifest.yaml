@@ -1,0 +1,87 @@
+# Manifest of trimmed audio clips used for retrieval/eval testing.
+#
+# start_sec/end_sec are offsets into the ORIGINAL source video (not the
+# clip file). duration_sec is the clip's own length. sha256 is of the
+# clip file itself (clips/<file>), for integrity/dedup checking.
+#
+# speakers maps each diarized "Speaker N" label (as emitted in
+# transcripts/<file>.txt) to the real person's name.
+
+clips:
+  - file: clips/julius_caesar_24-43_35-31.mp3
+    transcript: transcripts/julius_caesar_24-43_35-31.txt
+    title: "Was Julius Caesar The Greatest Of All Roman Rulers?"
+    source_url: "https://www.youtube.com/watch?v=_2QLEmNH4bo"
+    podcast: "Dan Snow's History Hit"
+    start_sec: 1483.0
+    end_sec: 2131.6
+    duration_sec: 648.6
+    sha256: 6aa02e756360c46f8411636dd18cf528eeb79895a6e954f91eb20003a12112e6
+    speakers:
+      "Speaker 0": "Dr. Simon Elliott"   # guest, Roman military historian
+      "Speaker 1": "Dan Snow"            # host
+
+  - file: clips/dr_becky_1-00-10_1-12-56.mp3
+    transcript: transcripts/dr_becky_1-00-10_1-12-56.txt
+    title: "Dr. Becky Kennedy: The #1 Mistake Parents Make That Kills Confidence in Their Kids!"
+    source_url: "https://www.youtube.com/watch?v=o9xFySZ1tx8"
+    podcast: "Good Inside with Dr. Becky"
+    start_sec: 3610.0
+    end_sec: 4376.0
+    duration_sec: 766.008
+    sha256: ab33eae7efb931d88fd36522701f52e1877eed464c8eb15e3b6f9b5339562ee1
+    speakers:
+      "Speaker 0": "Dr. Becky Kennedy"   # host, clinical psychologist
+      "Speaker 1": "Jay"                 # co-host
+
+  - file: clips/openclaw_52-34_1-01-14.mp3
+    transcript: transcripts/openclaw_52-34_1-01-14.txt
+    title: "OpenClaw: The Viral AI Agent that Broke the Internet - Peter Steinberger"
+    source_url: "https://www.youtube.com/watch?v=YFjfBk8HI5o"
+    podcast: "Lex Fridman Podcast #491"
+    start_sec: 3154.0
+    end_sec: 3674.0
+    duration_sec: 520.008
+    sha256: f1215624c3b65772d169f333f1bfe070dd444c7e8509c611c55e8446eedce984
+    speakers:
+      "Speaker 0": "Peter Steinberger"   # guest, creator of OpenClaw
+      "Speaker 1": "Lex Fridman"         # host
+
+  - file: clips/sundar_pichai_1-15-23_1-25-13.mp3
+    transcript: transcripts/sundar_pichai_1-15-23_1-25-13.txt
+    title: "Sundar Pichai: CEO of Google and Alphabet"
+    source_url: "https://www.youtube.com/watch?v=9V6tWC4CdFQ"
+    podcast: "Lex Fridman Podcast #471"
+    start_sec: 4523.0
+    end_sec: 5113.0
+    duration_sec: 589.992
+    sha256: 5f932bf017b73168cd5c98431f5e925e046f666671a5b1f74dff5068b07472cf
+    speakers:
+      "Speaker 0": "Lex Fridman"         # host
+      "Speaker 1": "Sundar Pichai"       # guest, CEO of Google/Alphabet
+
+  - file: clips/the_problem_with_startup_experts.mp3
+    transcript: transcripts/the_problem_with_startup_experts.txt
+    title: "The Problem With Startup \"Experts\""
+    source_url: "https://www.youtube.com/watch?v=ClWQCm2h9iI"
+    podcast: "Y Combinator's Lightcone Podcast"
+    start_sec: 0.0
+    end_sec: 748.416
+    duration_sec: 748.416
+    sha256: eecbab087d6145817a76bef78c1d7d596a41f095f51b7c0d79545a2b6eea02b5
+    speakers:
+      "Speaker 0": "Dalton Caldwell"
+      "Speaker 1": "Michael Seibel"
+
+  - file: clips/by_the_dry_heart_of_empire_18-07.5_26-58.5.mp3
+    transcript: transcripts/by_the_dry_heart_of_empire_18-07.5_26-58.5.txt
+    title: "By the dry heart of empire"
+    source_url: "https://podtail.com/podcast/the-history-of-india-podcast/5-e-by-the-dry-heart-of-empire/"
+    podcast: "The History of India Podcast"
+    start_sec: 1087.5
+    end_sec: 1619.5
+    duration_sec: 532.0
+    sha256: f7810eb79fbb9fd654d3ab7c799a7d0b08ab66200746a85996f48a16e74817c0
+    speakers:
+      "Speaker 0": "Kit Patrick"         # host
+      "Speaker 1": "Dr. Hemanth Kadambi" # guest, archaeologist

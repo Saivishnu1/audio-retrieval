@@ -1,0 +1,43 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "audio-retrieval"
+version = "0.1.0"
+description = "Hybrid keyword + semantic search over diarized audio transcripts"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Saivishnu" }]
+dependencies = [
+    "yt-dlp>=2024.1.0",
+    "python-dotenv>=1.0.0",
+    "langgraph>=0.2.0",
+    "deepgram-sdk>=3.0.0",
+    "pyyaml>=6.0",
+    "openai>=1.50.0",
+    "langchain-openai>=0.2.0",
+    "langchain-community>=0.3.0",
+    "langchain-postgres>=0.0.18",
+    "langchain-core>=0.3.0",
+    "faiss-cpu>=1.8.0",
+    "sqlalchemy>=2.0.0",
+    "psycopg2-binary>=2.9.0",
+    "pgvector>=0.3.0",
+    "alembic>=1.13.0",
+    "sentence-transformers>=3.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4",
+    "black>=24.0",
+    "ruff>=0.4",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/retrieval", "src/ingestion", "src/core", "src/transcription", "src/youtube_audio"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
